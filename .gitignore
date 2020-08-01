@@ -1,6 +1,11 @@
+*.~*
+*.rc
+*.dres
 *.identcache
-*.dproj.local
+*.local
 *.stat
 /Win32
 /Win64
 /Design
+*/Win32
+/lib

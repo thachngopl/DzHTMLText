@@ -2,15 +2,22 @@ unit UFrmExample;
 
 interface
 
-uses Vcl.Forms, System.Classes, Vcl.Controls, DzHTMLText;
+uses Vcl.Forms, System.ImageList, Vcl.ImgList, Vcl.Controls, System.Classes,
+  DzHTMLText,
+  //
+  Vcl.Graphics;
 
 type
   TForm1 = class(TForm)
     Lb: TDzHTMLText;
-    procedure LbLinkClick(Sender: TObject; LinkID: Integer; Target: string;
+    MyImages: TImageList;
+    Lb2: TDzHTMLText;
+    Lb3: TDzHTMLText;
+    procedure FormCreate(Sender: TObject);
+    procedure LbRetrieveImgRes(Sender: TObject; const ResourceName: string;
+      Picture: TPicture; var Handled: Boolean);
+    procedure LbLinkClick(Sender: TObject; Link: TDHBaseLink;
       var Handled: Boolean);
-    procedure LbMouseEnter(Sender: TObject);
-    procedure LbMouseLeave(Sender: TObject);
   end;
 
 var
@@ -22,24 +29,31 @@ implementation
 
 uses Vcl.Dialogs;
 
-procedure TForm1.LbLinkClick(Sender: TObject; LinkID: Integer; Target: string;
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  ReportMemoryLeaksOnShutdown := True;
+end;
+
+procedure TForm1.LbLinkClick(Sender: TObject; Link: TDHBaseLink;
   var Handled: Boolean);
 begin
-  if Target='MSG_BOX' then
+  if Link.LinkRef.Target='INFO_ABOUT' then
   begin
-    ShowMessage('You have clicked at message box link!');
+    ShowMessage('This is the example app.');
     Handled := True;
   end;
 end;
 
-procedure TForm1.LbMouseEnter(Sender: TObject);
+procedure TForm1.LbRetrieveImgRes(Sender: TObject; const ResourceName: string;
+  Picture: TPicture; var Handled: Boolean);
 begin
-    Caption := 'OnMouseEnter';
-end;
+  if ResourceName='LOGO' then
+  begin
+    //Load image by myself
+    Picture.Assign(Application.Icon);
 
-procedure TForm1.LbMouseLeave(Sender: TObject);
-begin
-    Caption := 'OnMouseLeave';
+    Handled := True; //tell the component to NOT load resource automatically
+  end;
 end;
 
 end.
